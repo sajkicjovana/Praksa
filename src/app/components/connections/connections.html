@@ -1,0 +1,79 @@
+<h1>Connections</h1>
+<div class="container">
+    <button class="btnForm" (click)="openForm()">New Connection</button>
+  <angular-slickgrid gridId="grid1"
+            [columns]="columns"
+            [options]="gridOptions"
+            [dataset]="dataset">
+  </angular-slickgrid>
+
+@if(showForm){
+    <div>
+        <form #connForm="ngForm" (ngSubmit)="onSubmit(connForm)">
+            <!-- name -->
+            <input type="text" name="name" placeholder="Name" ngModel #name="ngModel" class="formNewConnection" required minlength="8" maxlength="30" pattern="^[a-zA-Z]+$">
+            @if(name.touched && name.invalid){
+                <div class="errorText">
+                    @if(name.errors?.['required']){
+                        Name is required.
+                    }
+                    @if(name.errors?.['minlength'] || name.errors?.['maxlength']){
+                        Name must be between 8-30 characters long.
+                    }
+                </div>
+            }
+            <input type="text" name="url" placeholder="Url" ngModel #url="ngModel" class="formNewConnection" required>
+            @if(url.touched && url.invalid){
+                <div class="errorText">
+                    @if(url.errors?.['required']){
+                        Url is required.
+                    }
+                    @if(url.errors?.['pattern']){
+                        Url format is wrong
+                    }
+                </div>
+            }
+            <input type="text" name="username" placeholder="Username" ngModel #username="ngModel" class="formNewConnection" required minlength="8" maxlength="30" pattern="^[a-zA-Z0-9]+$">
+            @if(username.touched && username.invalid){
+                <div class="errorText">
+                    @if(username.errors?.['required']){
+                        Username is required.
+                    }
+                    @if(username.errors?.['minlength'] || username.errors?.['maxlength']){
+                        Username must be unique.
+                    }
+                </div>
+            }
+            <input type="text" name="password" placeholder="Password" ngModel #password="ngModel" class="formNewConnection" required minlength="8" pattern="^[a-zA-Z0-9]+$">
+            @if(password.touched && password.invalid){
+                <div class="errorText">
+                    @if(name.errors?.['required']){
+                        Passwword is required.
+                    }
+                    @if(name.errors?.['minlength']){
+                        Password must be atleast 8 characters long.
+                    }
+                </div>
+            }
+            <input type="number" name="sms" placeholder="SMS throughput" ngModel #sms="ngModel" class="formNewConnection" >
+            <!-- add mps  -->
+
+            <!-- types -->
+            <select name="type" ngModel #type="ngModel" class="formNewConnection" required>
+                <option value="">Select type</option>
+                @for(t of types;track t) {
+                    <option [value]="t" >{{t}}</option>
+                }   
+            </select>
+            @if(type.touched && type.invalid){
+                <div class="errorText">
+                    Type is required
+                </div>
+            }
+            <button class="btnSave" type="submit">Save</button>
+            <button class="btnCloseForm" type="button" (click)="closeForm()">Cancel</button>
+
+        </form>
+    </div>
+}
+</div>
