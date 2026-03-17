@@ -25,7 +25,12 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "node_modules/bootstrap/dist/css/bootstrap.css",
+              "src/styles.css",
+               "node_modules/@slickgrid-universal/common/dist/styles/css/slickgrid-theme-bootstrap.css"
+            ],
+             "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
           "configurations": {
