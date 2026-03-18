@@ -1,79 +1,128 @@
-<h1>Connections</h1>
+<h1 class="page-title">Connections</h1>
 <div class="container">
-    <button class="btnForm" (click)="openForm()">New Connection</button>
-  <angular-slickgrid gridId="grid1"
-            [columns]="columns"
-            [options]="gridOptions"
-            [dataset]="dataset">
-  </angular-slickgrid>
+@if(!showForm || editingItem){
+  <button class="btnForm" (click)="openForm()">+ New Connection</button>
+}
+  @if(showForm){
+    <div class="form-wrapper">
+      <div class="form-header">
+        <h3>{{ editingItem ? 'Edit Connection' : 'Create New Connection' }}</h3>
+      </div>
+      <form #connForm="ngForm" (ngSubmit)="onSubmit(connForm)">
+        <div class="form-grid">
 
-@if(showForm){
-    <div>
-        <form #connForm="ngForm" (ngSubmit)="onSubmit(connForm)">
-            <!-- name -->
-            <input type="text" name="name" placeholder="Name" ngModel #name="ngModel" class="formNewConnection" required minlength="8" maxlength="30" pattern="^[a-zA-Z]+$">
+          <div class="form-field">
+            <label>Name</label>
+            <input type="text" name="name" [(ngModel)]="formModel.name" #name="ngModel"
+              class="formNewConnection" required pattern="^[A-Za-z0-9\s]{8,30}$">
             @if(name.touched && name.invalid){
-                <div class="errorText">
-                    @if(name.errors?.['required']){
-                        Name is required.
-                    }
-                    @if(name.errors?.['minlength'] || name.errors?.['maxlength']){
-                        Name must be between 8-30 characters long.
-                    }
-                </div>
+              <div class="errorText">
+                @if(name.errors?.['required']){ Name is required. }
+                @if(name.errors?.['pattern']){ Name must be 8-30 letters only. }
+              </div>
             }
-            <input type="text" name="url" placeholder="Url" ngModel #url="ngModel" class="formNewConnection" required>
-            @if(url.touched && url.invalid){
-                <div class="errorText">
-                    @if(url.errors?.['required']){
-                        Url is required.
-                    }
-                    @if(url.errors?.['pattern']){
-                        Url format is wrong
-                    }
-                </div>
-            }
-            <input type="text" name="username" placeholder="Username" ngModel #username="ngModel" class="formNewConnection" required minlength="8" maxlength="30" pattern="^[a-zA-Z0-9]+$">
-            @if(username.touched && username.invalid){
-                <div class="errorText">
-                    @if(username.errors?.['required']){
-                        Username is required.
-                    }
-                    @if(username.errors?.['minlength'] || username.errors?.['maxlength']){
-                        Username must be unique.
-                    }
-                </div>
-            }
-            <input type="text" name="password" placeholder="Password" ngModel #password="ngModel" class="formNewConnection" required minlength="8" pattern="^[a-zA-Z0-9]+$">
-            @if(password.touched && password.invalid){
-                <div class="errorText">
-                    @if(name.errors?.['required']){
-                        Passwword is required.
-                    }
-                    @if(name.errors?.['minlength']){
-                        Password must be atleast 8 characters long.
-                    }
-                </div>
-            }
-            <input type="number" name="sms" placeholder="SMS throughput" ngModel #sms="ngModel" class="formNewConnection" >
-            <!-- add mps  -->
+          </div>
 
-            <!-- types -->
-            <select name="type" ngModel #type="ngModel" class="formNewConnection" required>
-                <option value="">Select type</option>
-                @for(t of types;track t) {
-                    <option [value]="t" >{{t}}</option>
-                }   
+          <div class="form-field">
+            <label>URL</label>
+            <input type="text" name="url" [(ngModel)]="formModel.url" #url="ngModel"
+              class="formNewConnection" required
+              pattern="https?:\/\/(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}.*">
+            @if(url.touched && url.invalid){
+              <div class="errorText">
+                @if(url.errors?.['required']){ URL is required. }
+                @if(url.errors?.['pattern']){ URL format is wrong. }
+              </div>
+            }
+          </div>
+
+          <div class="form-field">
+            <label>Username</label>
+            <input type="text" name="username" [(ngModel)]="formModel.username" #username="ngModel"
+              class="formNewConnection" required pattern="^[a-zA-Z0-9]{8,30}$">
+            @if(username.touched && username.invalid){
+              <div class="errorText">
+                @if(username.errors?.['required']){ Username is required. }
+                @if(username.errors?.['pattern']){ Username must be 8-30 letters/numbers. }
+              </div>
+            }
+            @if(username.value && isUsernameTaken(username.value)){
+              <div class="errorText">Username already exists.</div>
+            }
+          </div>
+
+          <div class="form-field">
+            <label>Password</label>
+            <input type="password" name="password" [(ngModel)]="formModel.password" #password="ngModel"
+              class="formNewConnection" required pattern="^(?=.*[A-Z])(?=.*[0-9]).{8,}$">
+            @if(password.touched && password.invalid){
+              <div class="errorText">
+                @if(password.errors?.['required']){ Password is required. }
+                @if(password.errors?.['pattern']){ Min 8 chars, 1 uppercase & 1 number. }
+              </div>
+            }
+          </div>
+
+          <div class="form-field">
+            <label>SMS Throughput</label>
+            <input type="number" name="sms" [(ngModel)]="formModel.sms" #sms="ngModel"
+              class="formNewConnection" required min="1" max="100000">
+            @if(sms.touched && sms.invalid){
+              <div class="errorText">
+                @if(sms.errors?.['required']){ Required. }
+                @if(sms.errors?.['type']){ Must be number. }
+              </div>
+            }
+          </div>
+
+          <div class="form-field">
+            <label>Type</label>
+            <select name="type" [(ngModel)]="formModel.type" #type="ngModel"
+              class="formNewConnection" required>
+              <option value="">Select type</option>
+              @for(t of types; track t){
+                <option [value]="t">{{ t }}</option>
+              }
             </select>
             @if(type.touched && type.invalid){
-                <div class="errorText">
-                    Type is required
-                </div>
+              <div class="errorText">Type is required.</div>
             }
-            <button class="btnSave" type="submit">Save</button>
-            <button class="btnCloseForm" type="button" (click)="closeForm()">Cancel</button>
+          </div>
 
-        </form>
+        </div>
+
+        <div class="form-actions">
+          <button class="btnSave" type="submit"
+            [disabled]="connForm.invalid || isUsernameTaken(username.value)">
+            {{ editingItem ? '✓ Update' : '✓ Save' }}
+          </button>
+          <button class="btnCloseForm" type="button" (click)="closeForm()">Cancel</button>
+        </div>
+      </form>
     </div>
+  }
+
+<angular-slickgrid
+  gridId="grid1"
+  [columns]="columns"
+  [options]="gridOptions"
+  [dataset]="dataset"
+  (onClick)="onGridClick($event)"></angular-slickgrid>
+  <!-- (onAngularGridCreated)="onGridReady()"> 
+</angular-slickgrid> -->
+
+@if(showDeleteModal){
+  <div class="modal-backdrop" (click)="cancelDelete()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-icon">🗑️</div>
+      <h3>Delete Connection</h3>
+      <p>Are you sure you want to delete <strong>{{ itemToDelete?.name }}</strong>?</p>
+      <p class="modal-sub">This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btnDelete" (click)="deleteConfirmed()">Yes, Delete</button>
+        <button class="btnCloseForm" (click)="cancelDelete()">Cancel</button>
+      </div>
+    </div>
+  </div>
 }
 </div>
