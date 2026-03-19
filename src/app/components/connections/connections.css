@@ -267,3 +267,7 @@ angular-slickgrid {
   /* color: #9ca3af; */
   cursor: not-allowed;
 }
+.btnRst {
+  padding: 8px;
+  border-radius: 6px;
+}

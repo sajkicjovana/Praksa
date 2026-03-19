@@ -18,6 +18,10 @@ export class Routing implements OnInit{
   private cdr=inject(ChangeDetectorRef);
   private connectService = inject(ConnectionsService);
 
+  searchCountry: string = '';
+  searchOperator: string = '';
+  searchConnection: string = '';
+
   connections: any[] = [];
   countries: any[] = [];
   operators: any[] = [];
@@ -147,10 +151,15 @@ export class Routing implements OnInit{
 
   startEdit(item: any) {
     this.editingItem = item;
-    console.log(item);
-    this.formModel = { ...item };
-    console.log(this.formModel);
+    // console.log(item);
+    this.formModel = {...item,
+      country:item.countryId,
+      operator:item.operatorId,
+      connection:item.connectionId
+     };
+    // console.log(this.formModel);
     this.showForm = true;
+    this.onCountryChange()
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -189,7 +198,7 @@ export class Routing implements OnInit{
       countryId: Number(this.formModel.country),
       operatorId: Number(this.formModel.operator),
       connectionId: Number(this.formModel.connection),
-      price: Number(this.formModel.price),
+      price: parseFloat(this.formModel.price),
       currency: this.formModel.currency,
     };
     console.log("DTo submit",dto)
@@ -207,6 +216,44 @@ export class Routing implements OnInit{
       });
     }
     // this.loadAll();
+  }
+
+  get filteredData(){
+
+    // console.log("Serach:",this.searchName);
+    // console.log("Type:",this.selectedType);
+
+    // console.log(this.dataset)
+
+    let data = [...this.dataset];
+    if(this.searchCountry){
+      const term = this.searchCountry.toLowerCase();
+      data = data.filter(item =>
+        (item.country || '').toLowerCase().includes(term)
+      );
+    }
+    if(this.searchOperator){
+      const term=this.searchOperator.toLowerCase();
+      data=data.filter(item =>
+        (item.operator || '').toLowerCase().includes(term)
+      );
+    }
+    if(this.searchConnection){
+      const term=this.searchConnection.toLowerCase();
+      data=data.filter(item =>
+        (item.connection || '').toLowerCase().includes(term)
+      );
+    }
+
+  
+    return data;
+    // console.log(this.dataset)
+    // console.log(this.filteredDataset)
+  }
+  resetFilters(){
+    this.searchCountry = '';
+    this.searchOperator = '';
+    this.searchConnection = ''
   }
 
 
