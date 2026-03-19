@@ -239,3 +239,26 @@ angular-slickgrid {
 .grid-btn-delete svg * {
   pointer-events: none;
 }
+
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+  
+}
+.search-input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.filter-select {
+  padding: 8px;
+  border-radius: 6px;
+}
+.loading {
+  text-align: center;
+  padding: 30px;
+  font-weight: 500;
+  color:#6b7280
+}

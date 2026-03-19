@@ -12,7 +12,12 @@ import { ConnectionsService } from '../../connections.service';
 export class Connections implements OnInit {
   private service = inject(ConnectionsService);
   private zone = inject(NgZone);
-private cdr= inject(ChangeDetectorRef);
+  private cdr= inject(ChangeDetectorRef);
+  
+  searchName: string='';
+  selectedType:string='';
+  // filteredDataset:any[]=[];
+
   columns: Column[] = [];
   gridOptions: GridOption = {};
   dataset: any[] = [];
@@ -21,6 +26,7 @@ private cdr= inject(ChangeDetectorRef);
   itemToDelete: any = null;
   editingItem: any = null;
   types = ['HTTP', 'SMPP'];
+  isLoading=true;
 
   formModel = {
     name: '', url: '', username: '', password: '', sms: null as any, type: ''
@@ -28,23 +34,27 @@ private cdr= inject(ChangeDetectorRef);
 
   constructor() {
     this.prepareGrid();
+    // this.filteredDataset=this.dataset;
   }
 
   ngOnInit() {
     this.loadAll();
+    // this.applyFilters();
   }
-  // onGridReady(){
-  //   this.loadAll();
-  // }
+
 
   loadAll() {
+    this.isLoading=true;
     this.service.getAll().subscribe(data => {
       this.dataset = data.map(item => ({
         ...item,
         username: item.userName,
         sms: item.smsThroughput,
-        type: item.type.toUpperCase()
+        type: item.type.toUpperCase(),
+       
       }));
+      // this.filteredDataset=this.dataset;
+      this.isLoading=false;
       this.cdr.detectChanges();
     });
   }
@@ -166,4 +176,34 @@ private cdr= inject(ChangeDetectorRef);
       item.username === username && item.id !== this.editingItem?.id
     );
   }
+
+  get filteredData(){
+
+    // console.log("Serach:",this.searchName);
+    // console.log("Type:",this.selectedType);
+
+    // console.log(this.dataset)
+
+    let data=[...this.dataset];
+    if(this.searchName){
+      const term=this.searchName.toLowerCase();
+      data=data.filter(item=>
+        (item.name || '').toLowerCase().includes(term)
+      );
+    }
+
+    if(this.selectedType){
+      data=data.filter(item=>
+        (item.type || '')===this.selectedType
+      );
+    }
+    return data;
+    // console.log(this.dataset)
+    // console.log(this.filteredDataset)
+  }
+  resetFilters(){
+    this.searchName='';
+    this.selectedType='';
+  }
+
 }

@@ -26,8 +26,8 @@
           <div class="form-field">
             <label>URL</label>
             <input type="text" name="url" [(ngModel)]="formModel.url" #url="ngModel"
-              class="formNewConnection" required
-              pattern="https?:\/\/(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}.*">
+              class="formNewConnection" [required]="formModel.type==='HTTP'"
+              pattern="https?:\/\/(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}.*" >
             @if(url.touched && url.invalid){
               <div class="errorText">
                 @if(url.errors?.['required']){ URL is required. }
@@ -101,16 +101,30 @@
       </form>
     </div>
   }
+  <div class="filter-bar">
+    <input type="text" placeholder="Search by name" [(ngModel)]="searchName"  class="search-input">
+    <select [(ngModel)]="selectedType" class="filter-select">
+      <option value="">All types</option>
+      <option value="HTTP">HTTP</option>
+      <option value="SMPP">SMPP</option>
+    </select>
 
-<angular-slickgrid
-  gridId="grid1"
-  [columns]="columns"
-  [options]="gridOptions"
-  [dataset]="dataset"
-  (onClick)="onGridClick($event)"></angular-slickgrid>
-  <!-- (onAngularGridCreated)="onGridReady()"> 
-</angular-slickgrid> -->
+    <button class="btnRst" (click)="resetFilters()">Reset filters</button>
+  </div>
 
+  @if(isLoading){
+    <div class="loading">Loading...</div>
+  }
+  @else{
+    <angular-slickgrid
+      gridId="grid1"
+      [columns]="columns"
+      [options]="gridOptions"
+      [dataset]="filteredData" 
+      (onClick)="onGridClick($event)"></angular-slickgrid>
+      <!-- (onAngularGridCreated)="onGridReady()"> 
+    </angular-slickgrid> -->
+  }
 @if(showDeleteModal){
   <div class="modal-backdrop" (click)="cancelDelete()">
     <div class="modal" (click)="$event.stopPropagation()">
