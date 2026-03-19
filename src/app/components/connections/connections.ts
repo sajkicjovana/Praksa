@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, NgZone, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Column, GridOption, AngularSlickgridComponent, Formatter } from 'angular-slickgrid';
-import { ConnectionsService } from '../../connections.service';
+import { ConnectionsService } from '../../services/connections.service';
 
 @Component({
   selector: 'app-connections',
@@ -142,6 +142,7 @@ export class Connections implements OnInit {
         error: err => console.error('Update error:', err.error)
       });
     } else {
+    
       this.service.create(dto).subscribe({
         next: () => { this.loadAll(); this.closeForm(); form.reset(); },
         error: err => console.error('Create error:', err.error)
