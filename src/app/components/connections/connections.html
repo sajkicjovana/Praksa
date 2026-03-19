@@ -26,7 +26,7 @@
           <div class="form-field">
             <label>URL</label>
             <input type="text" name="url" [(ngModel)]="formModel.url" #url="ngModel"
-              class="formNewConnection" [required]="formModel.type==='HTTP'"
+              class="formNewConnection" [required]="formModel.type==='HTTP'" [disabled]="formModel.type==='SMPP'"
               pattern="https?:\/\/(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}.*" >
             @if(url.touched && url.invalid){
               <div class="errorText">
@@ -78,7 +78,7 @@
           <div class="form-field">
             <label>Type</label>
             <select name="type" [(ngModel)]="formModel.type" #type="ngModel"
-              class="formNewConnection" required>
+              class="formNewConnection" required [disabled]="editingItem">
               <option value="">Select type</option>
               @for(t of types; track t){
                 <option [value]="t">{{ t }}</option>

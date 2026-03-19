@@ -205,5 +205,10 @@ export class Connections implements OnInit {
     this.searchName='';
     this.selectedType='';
   }
+  onTypeChange(){
+    if(this.formModel.type=='SMPP'){
+      this.formModel.url='';
+    }
+  }
 
 }

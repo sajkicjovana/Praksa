@@ -262,3 +262,8 @@ angular-slickgrid {
   font-weight: 500;
   color:#6b7280
 }
+:disabled{
+  background: color #f3f4f6;
+  /* color: #9ca3af; */
+  cursor: not-allowed;
+}
