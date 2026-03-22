@@ -1,1 +1,12 @@
-<p>home works!</p>
+<!-- <p>home works!</p> -->
+<header>
+    <a routerLink="/home">Home</a>
+    @if(isLogged()){
+        <a routerLink="/connections">Connections</a>
+        <a routerLink="/routing">Routing</a>
+        <a (click)="Logout()">Logout</a>
+    }@else {
+        <a routerLink="/login">Login</a>
+        <a routerLink="/register">Register</a>
+    }
+</header>

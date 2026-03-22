@@ -25,6 +25,10 @@ export const routes: Routes = [
         path:"routing",
         component:Routing,
     },
+    {
+        path:"",
+        component:Home,
+    }
     
 
 ];

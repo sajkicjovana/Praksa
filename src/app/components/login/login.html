@@ -1,1 +1,45 @@
-<p>login works!</p>
+<!-- <p>login works!</p> -->
+<header class="header">
+    <a routerLink="/home">Home</a>
+    @if(isLogged()){
+        <a routerLink="/connections">Connections</a>
+        <a routerLink="/routing">Routing</a>
+        <a (click)="Logout()">Logout</a>
+    }@else {
+        <!-- <p routerLink="/login">Login</p> -->
+        <a routerLink="/register">Register</a>
+    }
+</header>
+
+<div class="container">
+<form #connForm="ngForm"  (ngSubmit)="onSubmit(connForm)" class="form-wrapper" >
+
+    <div class="form-field">
+        <label>Email</label>
+        <input type="text" name="email" required #email="ngModel"
+         [(ngModel)]="formModel.email"  
+         class="formNew">
+        @if(email.touched && email.invalid){
+              <div class="errorText">
+                @if(email.errors?.['required']){ Email is required. }
+                @if(email.errors?.['pattern']){ Email must be at least 8 characters. }
+              </div>
+        }
+     
+    </div>
+
+    <div class="form-field">
+        <label>Password</label>
+        <input type="password"  name="password" [(ngModel)] ="formModel.password" #password="ngModel" required  class="formNew">
+        @if(password.touched && password.invalid){
+              <div class="errorText">
+                @if(password.errors?.['required']){ Password is required. }
+                @if(password.errors?.['pattern']){ Password must be at least 8 characters. }
+              </div>
+            }            
+    </div>
+
+    <button class="btnLogin" type="submit">Login</button>
+</form>
+</div>
+
