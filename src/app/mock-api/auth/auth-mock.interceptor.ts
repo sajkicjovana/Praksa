@@ -22,22 +22,14 @@ function ok(body: unknown, status = 200): Observable<HttpEvent<unknown>> {
 }
 
 function err(status: number, message: string): Observable<HttpEvent<unknown>> {
+    // return of(new HttpResponse({ status, body: { error: message } })).pipe(delay(SIMULATED_DELAY_MS));
     return throwError(() => ({
         status,
         error: { error: message }
     })).pipe(delay(SIMULATED_DELAY_MS));
 }
-    // return of(new HttpResponse({ status, body: { error: message } })).pipe(delay(SIMULATED_DELAY_MS));
 // }
 
-function isValidUrl(value: string): boolean {
-    try {
-        new URL(value);
-        return true;
-    } catch {
-        return false;
-    }
-}
 
 @Injectable()
 export class AuthMockInterceptor implements HttpInterceptor {
@@ -58,19 +50,25 @@ export class AuthMockInterceptor implements HttpInterceptor {
     // ── Handlers ────────────────────────────────────────────────────────────
 
     private login(req: HttpRequest<LoginRequest>): Observable<HttpEvent<unknown>> {
-        console.log(this.store.getAll());
+        // console.log(this.store.getAll());
         const body =  req.body ;
+        // console.log("aaaa:",body?.email)
+        // console.log("paaaasssLogin:",body?.password)
         if (!body?.email || !body?.password) {
             return err(400, 'email and password are required');
         }
         const user = this.store.findUser(body.email);
+        // console.log("aaaa:",user?.email)
         if(!user){
             return err(404,'The requested email does not exist')
         }
+        // console.log("userPass:",user?.password)
         if(user.password !== body.password){
+            // console.log("jok")
             return err(401,'Wrong password');
         }
 
+        // console.log("aaaa:",user.email)
         const rsponse: LoginResponse ={
             email:user.email,
             token:this.generateToken(user.email)

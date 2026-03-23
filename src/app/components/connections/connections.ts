@@ -2,10 +2,11 @@ import { ChangeDetectorRef, Component, NgZone, OnInit, inject } from '@angular/c
 import { FormsModule } from '@angular/forms';
 import { Column, GridOption, AngularSlickgridComponent, Formatter } from 'angular-slickgrid';
 import { ConnectionsService } from '../../services/connections.service';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-connections',
-  imports: [AngularSlickgridComponent, FormsModule],
+  imports: [AngularSlickgridComponent,RouterLink,FormsModule],
   templateUrl: './connections.html',
   styleUrl: './connections.css',
 })
@@ -13,6 +14,8 @@ export class Connections implements OnInit {
   private service = inject(ConnectionsService);
   private zone = inject(NgZone);
   private cdr= inject(ChangeDetectorRef);
+  
+  router: Router = inject(Router);
   
   searchName: string='';
   selectedType:string='';
@@ -41,7 +44,13 @@ export class Connections implements OnInit {
     this.loadAll();
     // this.applyFilters();
   }
-
+  isLogged() {
+      return localStorage.getItem("token") != null;
+    }
+  Logout() {
+      localStorage.removeItem("token");
+      this.router.navigate(["login"]);
+    }
 
   loadAll() {
     this.isLoading=true;

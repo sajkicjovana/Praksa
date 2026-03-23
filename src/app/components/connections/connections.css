@@ -5,13 +5,41 @@
   overflow: visible !important;
 }
 .page-title{
-/* text-align: center; */
+text-align: center;
 font-size: 50px;
 font-weight: 700;
 margin-bottom: 20px;
 color:#1f2957;
 letter-spacing: 0.5px;
 }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: #2563eb;
+  color: white;
+}
+
+.header a {
+  color: white;
+  text-decoration: none;
+  /* cursor: pointer; */
+  margin-right: 20px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.header a:hover {
+  opacity: 0.8;
+}
+
+.header a:last-child {
+  margin-right: 0;
+}
+
+
 .btnForm {
   background-color: #2563eb;
   color: white;

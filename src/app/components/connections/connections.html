@@ -1,4 +1,27 @@
+<!-- <header class="header">
+    <a routerLink="/">Home</a>
+    @if(isLogged()){
+        <a routerLink="/connections">Connections</a>
+        <a routerLink="/routing">Routing</a>
+        <a (click)="Logout()">Logout</a>
+    }@else {
+        <a routerLink="/login">Login</a>
+        <a routerLink="/register">Register</a>
+    }
+</header>  -->
 <h1 class="page-title">Connections</h1>
+<header class="header">
+    <a routerLink="/">Home</a>
+    @if(isLogged()){
+        <!-- <a routerLink="/connections">Connections</a> -->
+        <a routerLink="/routing">Routing</a>
+        <a (click)="Logout()">Logout</a>
+    }@else {
+        <a routerLink="/login">Login</a>
+        <a routerLink="/register">Register</a>
+    }
+</header> 
+
 <div class="container">
 @if(!showForm || editingItem){
   <button class="btnForm" (click)="openForm()">+ New Connection</button>

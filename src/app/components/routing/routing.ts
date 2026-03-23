@@ -5,10 +5,11 @@ import { ConnectionsService } from '../../services/connections.service';
 import { RoutingService } from '../../services/routing.service';
 import { Connections } from '../connections/connections';
 import { forkJoin } from 'rxjs';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-routing',
-  imports: [FormsModule,AngularSlickgridComponent],
+  imports: [RouterLink,FormsModule,AngularSlickgridComponent],
   templateUrl: './routing.html',
   styleUrl: './routing.css',
 })
@@ -17,7 +18,9 @@ export class Routing implements OnInit{
   private zone=inject(NgZone);
   private cdr=inject(ChangeDetectorRef);
   private connectService = inject(ConnectionsService);
-
+  
+  router: Router = inject(Router);
+  
   searchCountry: string = '';
   searchOperator: string = '';
   searchConnection: string = '';
@@ -77,6 +80,13 @@ export class Routing implements OnInit{
       this.cdr.detectChanges();
     });
   }
+    isLogged() {
+      return localStorage.getItem("token") != null;
+    }
+  Logout() {
+      localStorage.removeItem("token");
+      this.router.navigate(["login"]);
+    }
 
   getCountryName(id: number): string{
     return this.countries.find(c =>c.id===id)?.name || '';

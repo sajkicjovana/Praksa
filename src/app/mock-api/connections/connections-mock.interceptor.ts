@@ -6,7 +6,7 @@ import {
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { ConnectionsMockStore } from './connections-mock.store';
 import { CreateConnectionDto, UpdateConnectionDto } from './connection.model';
@@ -19,7 +19,11 @@ function ok(body: unknown, status = 200): Observable<HttpEvent<unknown>> {
 }
 
 function err(status: number, message: string): Observable<HttpEvent<unknown>> {
-    return of(new HttpResponse({ status, body: { error: message } })).pipe(delay(SIMULATED_DELAY_MS));
+    // return of(new HttpResponse({ status, body: { error: message } })).pipe(delay(SIMULATED_DELAY_MS));
+     return throwError(() => ({
+            status,
+            error: { error: message }
+        })).pipe(delay(SIMULATED_DELAY_MS));
 }
 
 function isValidUrl(value: string): boolean {

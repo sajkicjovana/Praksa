@@ -48,7 +48,7 @@ export class AuthMockStore{
             email:dto.email,
             name:dto.name,
             password:dto.password,
-            role:'user'
+            role:dto.role
         }
 
         users.push(newUser);

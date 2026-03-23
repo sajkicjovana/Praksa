@@ -6,7 +6,7 @@ import {
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { COUNTRIES, OPERATORS, RoutingMockStore } from './routing-mock.store';
 import { CreateRoutingDto, UpdateRoutingDto } from './routing.model';
@@ -18,7 +18,11 @@ function ok(body: unknown, status = 200): Observable<HttpEvent<unknown>> {
 }
 
 function err(status: number, message: string): Observable<HttpEvent<unknown>> {
-    return of(new HttpResponse({ status, body: { error: message } })).pipe(delay(SIMULATED_DELAY_MS));
+    // return of(new HttpResponse({ status, body: { error: message } })).pipe(delay(SIMULATED_DELAY_MS));
+     return throwError(() => ({
+            status,
+            error: { error: message }
+        })).pipe(delay(SIMULATED_DELAY_MS));
 }
 
 @Injectable()
