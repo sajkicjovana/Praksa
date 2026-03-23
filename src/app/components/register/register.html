@@ -1,6 +1,6 @@
 <!-- <p>register works!</p> -->
-<header>
-    <a routerLink="/home">Home</a>
+<header class="header">
+    <a routerLink="/">Home</a>
     @if(isLogged()){
         <a routerLink="/connections">Connections</a>
         <a routerLink="/routing">Routing</a>
@@ -9,4 +9,64 @@
         <a routerLink="/login">Login</a>
         <!-- <a routerLink="/register">Register</a> -->
     }
-</header>
+</header> 
+
+<div class="container">
+<form #connForm="ngForm"  (ngSubmit)="onSubmit(connForm)" class="form-wrapper" >
+
+    <div class="form-field">
+        <label>First Name</label>
+        <input type="text" name="firstname" required #firstname="ngModel"
+         [(ngModel)]="formModel.firstname"  
+         class="formNew">
+        @if(firstname.touched && firstname.invalid){
+              <div class="errorText">
+                @if(firstname.errors?.['required']){ First Name is required. }
+                <!-- @if(firstname.errors?.['pattern']){Firstname characters. } -->
+              </div>
+        }
+     
+    </div>
+
+    <div class="form-field">
+        <label>LastName</label>
+        <input type="text" name="lastname" required #lastname="ngModel"
+         [(ngModel)]="formModel.lastname"  
+         class="formNew">
+        @if(lastname.touched && lastname.invalid){
+              <div class="errorText">
+                @if(lastname.errors?.['required']){ Last Name is required. }
+                <!-- @if(firstname.errors?.['pattern']){Firstname characters. } -->
+              </div>
+        }
+     
+    </div>
+    <div class="form-field">
+        <label>Email</label>
+        <input type="text" name="email" required #email="ngModel"
+         [(ngModel)]="formModel.email"  
+         class="formNew">
+        @if(email.touched && email.invalid){
+              <div class="errorText">
+                @if(email.errors?.['required']){ Email is required. }
+                @if(email.errors?.['pattern']){ Email must be at least 8 characters. }
+              </div>
+        }
+     
+    </div>
+
+    <div class="form-field">
+        <label>Password</label>
+        <input type="password"  name="password" [(ngModel)] ="formModel.password" #password="ngModel" required  class="formNew">
+        @if(password.touched && password.invalid){
+              <div class="errorText">
+                @if(password.errors?.['required']){ Password is required. }
+                @if(password.errors?.['pattern']){ Password must be at least 8 characters. }
+              </div>
+            }            
+    </div>
+
+    <button class="btnRegister" type="submit" [disabled]="connForm.invalid">Register now</button>
+</form>
+</div>
+

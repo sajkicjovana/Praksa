@@ -45,12 +45,17 @@ export class Login {
       this.auth.login(dto).subscribe({
         next: res => { console.log("loginUspesan");
           localStorage.setItem("token", res.token);
-
+          console.log(res.token)
+// console.log(localStorage.getItem('token'))
           this.router.navigate(['./connections']);
         },
         error:err => {
           console.log("greska");
+          // console.log(err.error?.error )
           this.error = err.error?.error || "Login failed";
+          // this.formModel.email='';
+          // this.formModel.password='';
+          console.log(this.error)
         }
       })
   }

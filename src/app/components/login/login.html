@@ -1,6 +1,6 @@
 <!-- <p>login works!</p> -->
 <header class="header">
-    <a routerLink="/home">Home</a>
+    <a routerLink="/">Home</a>
     @if(isLogged()){
         <a routerLink="/connections">Connections</a>
         <a routerLink="/routing">Routing</a>
@@ -31,15 +31,20 @@
     <div class="form-field">
         <label>Password</label>
         <input type="password"  name="password" [(ngModel)] ="formModel.password" #password="ngModel" required  class="formNew">
-        @if(password.touched && password.invalid){
+        @if(password.touched ){
               <div class="errorText">
                 @if(password.errors?.['required']){ Password is required. }
                 @if(password.errors?.['pattern']){ Password must be at least 8 characters. }
               </div>
             }            
     </div>
-
-    <button class="btnLogin" type="submit">Login</button>
+    @if(this.error){
+        <div class="errorText">
+            You have entered an invalid username or password
+        </div>
+            }            
+    
+    <button class="btnLogin" type="submit" [disabled]="connForm.invalid">Login</button>
 </form>
 </div>
 
