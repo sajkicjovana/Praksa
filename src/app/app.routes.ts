@@ -5,11 +5,14 @@ import { Register } from './components/register/register';
 import { noAuthGuard } from './guards/no-auth-guard';
 import { Connections } from './components/connections/connections';
 import { Routing } from './components/routing/routing';
+import { authGuard } from './guards/auth-guard';
+import { PageNotFound } from './components/page-not-found/page-not-found';
 
 export const routes: Routes = [
     {
         path:"connections",
         component:Connections,
+        canActivate: [authGuard]
     },
     {
         path:"login",
@@ -24,11 +27,15 @@ export const routes: Routes = [
     {
         path:"routing",
         component:Routing,
+        canActivate: [authGuard]
     },
     {
         path:"",
         component:Home,
+    },
+    {
+        path:"**",
+        component:PageNotFound
     }
-    
 
 ];
