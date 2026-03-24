@@ -4,9 +4,10 @@
     @if(isLogged()){
         <a routerLink="/connections">Connections</a>
         <a routerLink="/routing">Routing</a>
+        <a routerLink="/messages">Messages</a>
         <a (click)="Logout()">Logout</a>
     }@else {
-        <!-- <p routerLink="/login">Login</p> -->
+        <!-- <a routerLink="/login">Login</a> -->
         <a routerLink="/register">Register</a>
     }
 </header>

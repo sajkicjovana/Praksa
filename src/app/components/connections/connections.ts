@@ -53,7 +53,7 @@ export class Connections implements OnInit {
       this.router.navigate(["login"]);
     }
 
-  loadAll() {
+  loadAll(itemDeleted? : boolean) {
     this.isLoading=true;
     this.service.getAll().subscribe(data => {
       this.dataset = data.map(item => ({
@@ -66,6 +66,12 @@ export class Connections implements OnInit {
       // this.filteredDataset=this.dataset;
       this.isLoading=false;
       this.cdr.detectChanges();
+
+      if(itemDeleted){
+        this.snackBar.open("Connection is deleted ", 'Ok', {
+                duration: 3000
+              });
+      }
     });
   }
 
@@ -186,10 +192,8 @@ export class Connections implements OnInit {
         this.showDeleteModal = false;
         this.itemToDelete = null;
         //dodati ime konekcije
-        this.loadAll();
-         this.snackBar.open("Connection is deleted ", 'Ok', {
-          duration: 3000
-        });
+        this.loadAll(true);
+      
 
 
       },

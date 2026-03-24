@@ -1,4 +1,4 @@
-import { Country, Operator, Routing, CreateRoutingDto, UpdateRoutingDto } from './routing.model';
+import { Country, Operator, Routing, CreateRoutingDto, UpdateRoutingDto, Message, CreateMessageDto } from './routing.model';
 
 // ── Static Countries ──────────────────────────────────────────────────────────
 
@@ -148,5 +148,55 @@ export class RoutingMockStore {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(SEQ_KEY);
         this.initialize();
+    }
+}
+// ── Messages Store (localStorage) ────────────────────────────────────────────
+
+const MSG_STORAGE_KEY = 'mock_messages';
+const MSG_SEQ_KEY     = 'mock_messages_seq';
+
+export class MessagesMockStore {
+
+    private load(): Message[] {
+        const raw = localStorage.getItem(MSG_STORAGE_KEY);
+        return raw ? (JSON.parse(raw) as Message[]) : [];
+    }
+
+    private save(records: Message[]): void {
+        localStorage.setItem(MSG_STORAGE_KEY, JSON.stringify(records));
+    }
+
+    private nextId(): number {
+        const current = parseInt(localStorage.getItem(MSG_SEQ_KEY) ?? '0', 10);
+        const next = current + 1;
+        localStorage.setItem(MSG_SEQ_KEY, String(next));
+        return next;
+    }
+
+    getAll(): Message[] {
+        return this.load();
+    }
+
+
+    create(dto: CreateMessageDto): Message {
+        const records = this.load();
+        const record: Message = { id: this.nextId(), ...dto };
+        records.push(record);
+        this.save(records);
+        return record;
+    }
+    remove(id: number): Message | null {
+    const records = this.load();
+    const index = records.findIndex(r => r.id === id);
+    if (index === -1) return null;
+    const [deleted] = records.splice(index, 1);
+    this.save(records);
+    return deleted;
+    }
+
+    /** Dev helper — wipe all message log data */
+    reset(): void {
+        localStorage.removeItem(MSG_STORAGE_KEY);
+        localStorage.removeItem(MSG_SEQ_KEY);
     }
 }

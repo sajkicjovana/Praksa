@@ -15,18 +15,20 @@
     @if(isLogged()){
         <!-- <a routerLink="/connections">Connections</a> -->
         <a routerLink="/routing">Routing</a>
+        <a routerLink="/messages">Messages</a>
         <a (click)="Logout()">Logout</a>
     }@else {
         <a routerLink="/login">Login</a>
         <a routerLink="/register">Register</a>
     }
-</header> 
+</header>
 
 <div class="container">
 @if(!showForm || editingItem){
   <button class="btnForm" (click)="openForm()">+ New Connection</button>
 }
   @if(showForm){
+    <!-- <connectionForm [dataItem]="dataItemforForm" [mode]="formMode"></connectionForm> -->
     <div class="form-wrapper">
       <div class="form-header">
         <h3>{{ editingItem ? 'Edit Connection' : 'Create New Connection' }}</h3>

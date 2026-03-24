@@ -61,9 +61,9 @@ export class Routing implements OnInit{
     this.isLoading=true;
     forkJoin({
       countries:this.service.getCountries(),
-      operators:this.service.getOperators(),
+      operators:this.service.getAllOperators(),
       connections:this.connectService.getAll(),
-      routing:this.service.getAll()
+      routing:this.service.getAllRouting()
     }).subscribe(({countries,operators,connections,routing}) => {
       this.countries=countries;
       this.connections=connections;
@@ -184,7 +184,7 @@ export class Routing implements OnInit{
   }
 
   deleteConfirmed() {
-    this.service.delete(this.itemToDelete.id).subscribe({
+    this.service.deleteRouting(this.itemToDelete.id).subscribe({
       next: () => {
         this.showDeleteModal = false;
         this.itemToDelete = null;
@@ -215,7 +215,7 @@ export class Routing implements OnInit{
     };
     console.log("DTo submit",dto)
     if (this.editingItem) {
-      this.service.update(this.editingItem.id, dto).subscribe({
+      this.service.updateRouting(this.editingItem.id, dto).subscribe({
         next: () => { 
           this.loadAll(); 
           this.closeForm(); 
@@ -228,7 +228,7 @@ export class Routing implements OnInit{
       });
     } else {
 
-      this.service.create(dto).subscribe({
+      this.service.createRouting(dto).subscribe({
         
         next: () => { 
           this.loadAll(); 

@@ -8,8 +8,8 @@ import {
 } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { COUNTRIES, OPERATORS, RoutingMockStore } from './routing-mock.store';
-import { CreateRoutingDto, UpdateRoutingDto } from './routing.model';
+import { COUNTRIES, OPERATORS, RoutingMockStore,MessagesMockStore } from './routing-mock.store';
+import { CreateRoutingDto, UpdateRoutingDto, CreateMessageDto} from './routing.model';
 
 const SIMULATED_DELAY_MS = 300;
 
@@ -28,6 +28,7 @@ function err(status: number, message: string): Observable<HttpEvent<unknown>> {
 @Injectable()
 export class RoutingMockInterceptor implements HttpInterceptor {
     private store = new RoutingMockStore();
+    private messagesStore = new MessagesMockStore();
 
     intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const url = req.url;
@@ -69,6 +70,25 @@ export class RoutingMockInterceptor implements HttpInterceptor {
 
             return ok(OPERATORS);
         }
+
+                // ── /api/messages ─────────────────────────────────────────────────────
+                if (url.includes('/api/messages')) {
+                    const idMatch = url.match(/\/api\/messages\/(\d+)/);
+                     const id = idMatch ? parseInt(idMatch[1], 10) : null;
+                    switch (req.method) {
+                        case 'GET':  return ok(this.messagesStore.getAll());
+                        case 'POST': return this.postMessage(req as HttpRequest<CreateMessageDto>);
+                        case 'DELETE':
+                            if (id === null) return err(400, 'Id is required for delete');
+
+                            const deleted = this.messagesStore.remove(id);
+                            return deleted
+                                ? ok(deleted)
+                                : err(404, `Message with id ${id} not found`);
+
+                        default:     return err(405, 'Only GET and POST are supported on /api/messages');
+                    }
+                }
 
         // ── /api/routing ──────────────────────────────────────────────────────
         if (url.includes('/api/routing')) {
@@ -129,6 +149,25 @@ export class RoutingMockInterceptor implements HttpInterceptor {
         const deleted = this.store.remove(id);
         return deleted ? ok(deleted) : err(404, `Routing with id ${id} not found`);
     }
+    
+       private postMessage(req: HttpRequest<CreateMessageDto>): Observable<HttpEvent<unknown>> {
+            const body = req.body ?? ({} as CreateMessageDto);
+    
+            if (!body.senderId || body.senderId.trim() === '') {
+                return err(400, 'senderId is required');
+            }
+            if (!body.sendTo || body.sendTo.trim() === '') {
+                return err(400, 'sendTo is required');
+            }
+            if (!body.messageText || body.messageText.trim() === '') {
+                return err(400, 'messageText is required');
+            }
+            if (body.sent === undefined || body.sent === null) {
+                return err(400, 'sent (boolean) is required');
+            }
+    
+            return ok(this.messagesStore.create(body), 201);
+        }
 
     // ── Validation ───────────────────────────────────────────────────────────
 

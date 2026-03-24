@@ -1,0 +1,75 @@
+<div class="form-wrapper">
+  <div class="form-header">
+    <h3> + New Message</h3>
+  </div>
+
+  <form #connForm="ngForm" (ngSubmit)="onSubmit(connForm)">
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Sender</label>
+        <input type="text"
+               name="senderId"
+               [(ngModel)]="formModel.senderId" #senderId="ngModel"
+               class="formNew"
+               required>
+               @if(senderId.touched && senderId.invalid){
+                <div class="errorText">
+                    @if(senderId.errors?.['required']){ Name is required. }
+                    @if(senderId.errors?.['pattern']){ Name must be 8-30 letters only. }
+                </div>
+            }
+      </div>
+
+
+      <div class="form-field">
+        <label>Numbers</label>
+        <input type="number" [(ngModel)]="formModel.currentNumber" #number="ngModel"
+         name="numberInput"  (keydown)="addNumber($event)" class="formNew">
+            <!-- @if(number.touched && number.invalid){
+                <div class="errorText">
+                    @if(number.errors?.['required']){ Number is required. }
+                </div>
+            } -->
+        <div class="brojevi">
+          @for(n of numbers; track n){
+            <span class="broj">
+              {{n}}
+              <button type="button" (click)="removeNumber($index)">x</button>
+            </span>
+          }
+          @if(numbers.length===0){
+             <div class="errorText">
+                    @if(number.errors?.['required']){ Number is required. }
+              </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Message</label>
+        <input type="text"
+               name="messageText"
+               [(ngModel)]="formModel.messageText" #messageText = "ngModel"
+               class="formNew"
+               required>
+                @if(messageText.touched && messageText.invalid){
+                <div class="errorText">
+                    @if(messageText.errors?.['required']){ Message text is required. }
+                </div>
+            }
+               
+      </div>
+
+      <div class="form-actions">
+        <button class="btnSave" type="submit" [disabled]="connForm.invalid || numbers.length === 0">
+          Send
+        </button>
+
+        <button class="btnCloseForm" type="button" (click)="closeForm()">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+  </form>
+</div>

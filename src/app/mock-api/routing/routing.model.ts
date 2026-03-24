@@ -29,3 +29,19 @@ export interface Routing {
 export type CreateRoutingDto = Omit<Routing, 'id'>;
 
 export type UpdateRoutingDto = Partial<Omit<Routing, 'id'>>;
+
+// ── Message Log ───────────────────────────────────────────────────────────────
+
+export interface Message {
+    id: number;
+    senderId: string;
+    sendTo: string;
+    messageText: string;
+    country?: string;
+    operator?: string;
+    connection?: string;
+    sent: boolean;
+    failReason?: string;
+}
+
+export type CreateMessageDto = Omit<Message, 'id'>;

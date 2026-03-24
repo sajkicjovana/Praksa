@@ -7,6 +7,7 @@ import { Connections } from './components/connections/connections';
 import { Routing } from './components/routing/routing';
 import { authGuard } from './guards/auth-guard';
 import { PageNotFound } from './components/page-not-found/page-not-found';
+import { Messages } from './components/messages/messages';
 
 export const routes: Routes = [
     {
@@ -32,6 +33,11 @@ export const routes: Routes = [
     {
         path:"",
         component:Home,
+    },
+    {
+        path:"messages",
+        component:Messages,
+        // canActivate:[authGuard]
     },
     {
         path:"**",
