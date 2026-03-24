@@ -25,13 +25,12 @@
               }
             ],
             "styles": [
+              "src/material-theme.scss",
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "src/styles.css",
-               "node_modules/@slickgrid-universal/common/dist/styles/css/slickgrid-theme-bootstrap.css"
+              "node_modules/@slickgrid-universal/common/dist/styles/css/slickgrid-theme-bootstrap.css"
             ],
-             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ]
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
           },
           "configurations": {
             "production": {

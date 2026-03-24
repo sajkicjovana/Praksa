@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.services';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
@@ -26,7 +27,7 @@ export class Register {
       localStorage.removeItem("token");
       this.router.navigate(["login"]);
     }
-    
+    constructor(private snackBar: MatSnackBar){}
     onSubmit(form:any) {
       if (!form.valid) return;
       const dto = {
@@ -37,9 +38,13 @@ export class Register {
       }
         this.auth.register(dto).subscribe({
           next: res => { 
-            console.log("Napravljen nalog")
-            
-            this.router.navigate(['./login']);
+            // console.log("Napravljen nalog")
+            localStorage.setItem("token", res.token);
+            this.snackBar.open(`Welcome ${res.name}`, 'Ok', {
+          duration: 3000
+        });
+            this.router.navigate(['./connections']);
+            console.log(localStorage.getItem('token'))
           },
           error:err => {
             console.log("Jok");

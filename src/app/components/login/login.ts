@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from "@angular/router";
 import { LoginRequest } from '../../mock-api/auth/auth.model';
 import { AuthService } from '../../services/auth.services';
-
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-login',
   imports: [RouterLink,FormsModule],
@@ -16,10 +16,11 @@ export class Login {
   private auth = inject(AuthService);
   router: Router = inject(Router);
 
-
   formModel = {
     email: '', password: ''
   } 
+
+  constructor(private snackBar: MatSnackBar){}
   isLogged() {
     return localStorage.getItem("token") != null;
   }
@@ -47,6 +48,9 @@ export class Login {
           localStorage.setItem("token", res.token);
           console.log(res.token)
 // console.log(localStorage.getItem('token'))
+          this.snackBar.open(`Welcome ${res.name}`, 'Ok', {
+          duration: 3000
+        });
           this.router.navigate(['./connections']);
         },
         error:err => {

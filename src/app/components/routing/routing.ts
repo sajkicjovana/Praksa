@@ -3,10 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { Column, GridOption, AngularSlickgridComponent, Formatter } from 'angular-slickgrid';
 import { ConnectionsService } from '../../services/connections.service';
 import { RoutingService } from '../../services/routing.service';
-import { Connections } from '../connections/connections';
 import { forkJoin } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
-
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-routing',
   imports: [RouterLink,FormsModule,AngularSlickgridComponent],
@@ -50,7 +49,7 @@ export class Routing implements OnInit{
 
   //zemlja dropdown, operator dropdown, connections dropdown, price broj, currency dropdown
 
-  constructor() {
+  constructor(private snackBar: MatSnackBar) {
     this.prepareGrid();
   }
 
@@ -190,6 +189,9 @@ export class Routing implements OnInit{
         this.showDeleteModal = false;
         this.itemToDelete = null;
         this.loadAll();
+        this.snackBar.open("Route is deleted" , 'Ok', {
+          duration: 3000
+        });
       },
       error: err => console.error('Delete error:', err.error)
     });
@@ -214,14 +216,28 @@ export class Routing implements OnInit{
     console.log("DTo submit",dto)
     if (this.editingItem) {
       this.service.update(this.editingItem.id, dto).subscribe({
-        next: () => { this.loadAll(); this.closeForm(); form.reset(); },
+        next: () => { 
+          this.loadAll(); 
+          this.closeForm(); 
+          form.reset();
+          this.snackBar.open("Route successfully edited", 'Ok', {
+          duration: 3000
+        });
+         },
         error: err => console.error('Update error:', err.error)
       });
     } else {
 
       this.service.create(dto).subscribe({
         
-        next: () => { this.loadAll(); this.closeForm(); form.reset(); },
+        next: () => { 
+          this.loadAll(); 
+          this.closeForm(); 
+          form.reset();
+          this.snackBar.open("New route is successfully added ", 'Ok', {
+          duration: 3000
+        });
+         },
         error: err => console.error('Create error:', err.error)
       });
     }

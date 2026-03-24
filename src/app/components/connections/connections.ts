@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Column, GridOption, AngularSlickgridComponent, Formatter } from 'angular-slickgrid';
 import { ConnectionsService } from '../../services/connections.service';
 import { Router, RouterLink } from '@angular/router';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-connections',
@@ -35,7 +36,7 @@ export class Connections implements OnInit {
     name: '', url: '', username: '', password: '', sms: null as any, type: ''
   };
 
-  constructor() {
+  constructor(private snackBar: MatSnackBar) {
     this.prepareGrid();
     // this.filteredDataset=this.dataset;
   }
@@ -147,13 +148,28 @@ export class Connections implements OnInit {
 
     if (this.editingItem) {
       this.service.update(this.editingItem.id, dto).subscribe({
-        next: () => { this.loadAll(); this.closeForm(); form.reset(); },
+        next: () => { 
+          this.loadAll(); 
+          this.closeForm();
+          this.snackBar.open(`Connection ${this.formModel.name} successfully edited `, 'Ok', {
+          duration: 3000
+        });
+          form.reset();
+         },
+
         error: err => console.error('Update error:', err.error)
       });
     } else {
     
       this.service.create(dto).subscribe({
-        next: () => { this.loadAll(); this.closeForm(); form.reset(); },
+        next: () => { 
+          this.loadAll();
+          this.closeForm(); 
+          this.snackBar.open(`New connection ${this.formModel.name} is successfully added `, 'Ok', {
+          duration: 3000
+        });
+          form.reset();
+         },
         error: err => console.error('Create error:', err.error)
       });
     }
@@ -169,11 +185,22 @@ export class Connections implements OnInit {
       next: () => {
         this.showDeleteModal = false;
         this.itemToDelete = null;
+        //dodati ime konekcije
         this.loadAll();
+         this.snackBar.open("Connection is deleted ", 'Ok', {
+          duration: 3000
+        });
+
+
       },
       error: err => console.error('Delete error:', err.error)
     });
   }
+// ERROR Error: NG0100: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: '22'. Current value: '21'. Expression location: _Connections component. Find more at https://v21.angular.dev/errors/NG0100
+//     Angular 4
+//     Connections_Template connections.html:138
+//     Angular 2
+// _effect-chunk2.mjs:2601:19
 
   cancelDelete() {
     this.showDeleteModal = false;
