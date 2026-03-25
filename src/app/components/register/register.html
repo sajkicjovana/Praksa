@@ -44,9 +44,10 @@
     </div>
     <div class="form-field">
         <label>Email</label>
-        <input type="text" name="email" required #email="ngModel"
-         [(ngModel)]="formModel.email"  
+        <input type="email" name="email" required #email="ngModel"
+         [(ngModel)]="formModel.email"    pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
          class="formNew">
+              <!-- izmenjen pattern -->
         @if(email.touched && email.invalid){
               <div class="errorText">
                 @if(email.errors?.['required']){ Email is required. }
@@ -58,9 +59,11 @@
 
     <div class="form-field">
         <label>Password</label>
-        <input type="password"  name="password" [(ngModel)] ="formModel.password" #password="ngModel" required  class="formNew">
+        <input type="password"  name="password" [(ngModel)] ="formModel.password" #password="ngModel"  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required  class="formNew">
         @if(password.touched && password.invalid){
               <div class="errorText">
+              <!-- izmenjen pattern ?????????-->
+               
                 @if(password.errors?.['required']){ Password is required. }
                 @if(password.errors?.['pattern']){ Password must be at least 8 characters. }
               </div>

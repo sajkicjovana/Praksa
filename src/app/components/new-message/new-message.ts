@@ -48,11 +48,11 @@ export class NewMessageComponent {
         senderId: this.formModel.senderId,
         sendTo: num,
         messageText: this.formModel.messageText,
-        sent: true
       };
-
+      console.log(dto);
       this.service.create(dto).subscribe({
         next: () => {
+          
           this.snackBar.open('Message sent', 'OK', { duration: 2000 });
           this.saved.emit();
         },

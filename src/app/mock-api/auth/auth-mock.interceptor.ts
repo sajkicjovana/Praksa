@@ -72,7 +72,8 @@ export class AuthMockInterceptor implements HttpInterceptor {
         const rsponse: LoginResponse ={
             email:user.email,
             name: user.name,
-            token:this.generateToken(user.email)
+            token:this.generateToken(user.email),
+            role:user.role
         }
         return ok(rsponse);
     }
@@ -94,7 +95,8 @@ export class AuthMockInterceptor implements HttpInterceptor {
             id: user.id,
             email:user.email,
             name: user.name,
-            token:this.generateToken(user.email)
+            token:this.generateToken(user.email),
+            role:user.role
         }
         return ok(response,201);
     }

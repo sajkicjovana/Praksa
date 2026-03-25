@@ -11,7 +11,7 @@
                name="senderId"
                [(ngModel)]="formModel.senderId" #senderId="ngModel"
                class="formNew"
-               required>
+               >
                @if(senderId.touched && senderId.invalid){
                 <div class="errorText">
                     @if(senderId.errors?.['required']){ Name is required. }
@@ -23,7 +23,7 @@
 
       <div class="form-field">
         <label>Numbers</label>
-        <input type="number" [(ngModel)]="formModel.currentNumber" #number="ngModel"
+        <input type="text" pattern="^[0-9]+$" [(ngModel)]="formModel.currentNumber" #number="ngModel"
          name="numberInput"  (keydown)="addNumber($event)" class="formNew">
             <!-- @if(number.touched && number.invalid){
                 <div class="errorText">
@@ -40,6 +40,7 @@
           @if(numbers.length===0){
              <div class="errorText">
                     @if(number.errors?.['required']){ Number is required. }
+                    @if(number.errors?.['pattern']){ Only numbers are allowed. }
               </div>
           }
         </div>
@@ -51,7 +52,7 @@
                name="messageText"
                [(ngModel)]="formModel.messageText" #messageText = "ngModel"
                class="formNew"
-               required>
+               >
                 @if(messageText.touched && messageText.invalid){
                 <div class="errorText">
                     @if(messageText.errors?.['required']){ Message text is required. }

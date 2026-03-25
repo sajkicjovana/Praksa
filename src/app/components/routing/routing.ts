@@ -56,7 +56,7 @@ export class Routing implements OnInit{
   ngOnInit(){
     this.loadAll();
   }
-  loadAll(){
+  loadAll(itemDeleted? : boolean){
     // console.log("LOAD ALLL");
     this.isLoading=true;
     forkJoin({
@@ -77,6 +77,12 @@ export class Routing implements OnInit{
       }));
       this.isLoading=false;
       this.cdr.detectChanges();
+
+      if(itemDeleted){
+        this.snackBar.open("Connection is deleted ", 'Ok', {
+                duration: 3000
+              });
+      }
     });
   }
     isLogged() {
@@ -188,10 +194,8 @@ export class Routing implements OnInit{
       next: () => {
         this.showDeleteModal = false;
         this.itemToDelete = null;
-        this.loadAll();
-        this.snackBar.open("Route is deleted" , 'Ok', {
-          duration: 3000
-        });
+        this.loadAll(true);
+      
       },
       error: err => console.error('Delete error:', err.error)
     });

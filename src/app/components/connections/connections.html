@@ -52,7 +52,8 @@
             <label>URL</label>
             <input type="text" name="url" [(ngModel)]="formModel.url" #url="ngModel"
               class="formNewConnection" [required]="formModel.type==='HTTP'" [disabled]="formModel.type==='SMPP'"
-              pattern="https?:\/\/(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}.*" >
+              pattern="https?://.+"  >
+              <!-- izmenjen pattern -->
             @if(url.touched && url.invalid){
               <div class="errorText">
                 @if(url.errors?.['required']){ URL is required. }

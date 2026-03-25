@@ -5,8 +5,8 @@ const SEQ_KEY = 'mock_login_seq';
 
 const SEED_DATA: Omit<User,'id'>[]=[
     {  email: 'admin@gmail.com',name: "Petar Petrovic", password: 'admin123', role:'admin' },
-    {  email: 'user',name: "Marko Markovic" ,password: 'user123' , role:'admin'},
-    {  email: 'test',name: "Nikola Nikolic", password: 'test123' , role:'admin'}
+    {  email: 'user@gmail.com',name: "Marko Markovic" ,password: 'user123' , role:'user'},
+    {  email: 'test@gmail.com',name: "Nikola Nikolic", password: 'test123' , role:'admin'}
 
 ]
 

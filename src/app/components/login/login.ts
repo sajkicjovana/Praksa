@@ -46,12 +46,18 @@ export class Login {
       this.auth.login(dto).subscribe({
         next: res => { console.log("loginUspesan");
           localStorage.setItem("token", res.token);
+          localStorage.setItem("role",res.role);
           console.log(res.token)
 // console.log(localStorage.getItem('token'))
           this.snackBar.open(`Welcome ${res.name}`, 'Ok', {
           duration: 3000
         });
-          this.router.navigate(['./connections']);
+          if(res.role=='user'){
+            this.router.navigate(['./messages'])
+          }
+          else{
+            this.router.navigate(['./connections']);
+          }
         },
         error:err => {
           console.log("greska");

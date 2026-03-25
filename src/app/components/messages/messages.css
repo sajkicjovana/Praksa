@@ -157,6 +157,7 @@ form {
 
 angular-slickgrid {
   display: block;
+  text-align: left;
   width: 100%; 
   height: 500px;
   border-radius: 12px;
@@ -164,6 +165,7 @@ angular-slickgrid {
   margin-top: 15px;
   padding:10px;
 }
+
 
 .slick-header-columns {
   background-color: #4f46e5 !important;

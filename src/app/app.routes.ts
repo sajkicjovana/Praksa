@@ -8,12 +8,13 @@ import { Routing } from './components/routing/routing';
 import { authGuard } from './guards/auth-guard';
 import { PageNotFound } from './components/page-not-found/page-not-found';
 import { Messages } from './components/messages/messages';
+import { userGuardGuard } from './guards/user-guard-guard';
 
 export const routes: Routes = [
     {
         path:"connections",
         component:Connections,
-        canActivate: [authGuard]
+        canActivate: [authGuard,userGuardGuard]
     },
     {
         path:"login",
@@ -28,7 +29,7 @@ export const routes: Routes = [
     {
         path:"routing",
         component:Routing,
-        canActivate: [authGuard]
+        canActivate: [authGuard,userGuardGuard]
     },
     {
         path:"",
@@ -37,7 +38,7 @@ export const routes: Routes = [
     {
         path:"messages",
         component:Messages,
-        // canActivate:[authGuard]
+        canActivate:[authGuard]
     },
     {
         path:"**",

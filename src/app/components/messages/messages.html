@@ -23,13 +23,16 @@
       (saved)="onSaved()">
     </app-new-message>
   }
-
-  <angular-slickgrid
+  @if(isLoading){
+    <div class="loading">Loading...</div>
+  }
+  @else{
+  <angular-slickgrid 
     gridId="grid"
     [columns]="columns"
     [options]="gridOptions"
     [dataset]="messages"
     (onClick)="onGridClick($event)">
   </angular-slickgrid>
-
+  }
 </div>

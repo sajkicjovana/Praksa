@@ -40,8 +40,8 @@ export interface Message {
     country?: string;
     operator?: string;
     connection?: string;
-    sent: boolean;
-    failReason?: string;
+    sent?: boolean;
+    failReason?: string | null;
 }
 
 export type CreateMessageDto = Omit<Message, 'id'>;

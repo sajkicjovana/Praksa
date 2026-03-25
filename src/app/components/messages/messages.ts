@@ -27,27 +27,27 @@ export class Messages {
   columns: Column[] = [];
   gridOptions: GridOption = {};
 
-      isLogged() {
-      return localStorage.getItem("token") != null;
-    }
-    Logout() {
-      localStorage.removeItem("token");
-      this.router.navigate(["login"]);
-    }
+  isLogged() {
+    return localStorage.getItem("token") != null;
+  }
+  Logout() {
+    localStorage.removeItem("token");
+    this.router.navigate(["login"]);
+  }
+  
   ngOnInit() {
     this.loadAll();
   }
 
   constructor(private snackBar: MatSnackBar) {
     this.prepareGrid();
-    // this.filteredDataset=this.dataset;
   }
-  startEdit(item: Message) {
-  this.editingItem = item;
-  this.showForm = true;
-}
-  loadAll() {
 
+  startEdit(item: Message) {
+    this.editingItem = item;
+    this.showForm = true;
+  }
+  loadAll(note?:string) {
     this.isLoading=true;
     this.service.getAll().subscribe(data => {
       this.messages = data.map(item => ({
@@ -57,10 +57,13 @@ export class Messages {
         text: item.messageText
        
       }));
-      // this.filteredDataset=this.dataset;
+  
+      if(note){
+        this.snackBar.open(note, 'OK', { duration: 2000 });
+      }
       this.isLoading=false;
       this.cdr.detectChanges();
-      });
+    });
 }
 
   openForm() {
@@ -82,21 +85,20 @@ export class Messages {
 
         if (!dataContext['sent']) {
           buttons += `
-            <button class="grid-btn-retry" data-id="${dataContext['id']}" title="Retry">🔄</button>
+            <button class="grid-btn-retry" data-id="${dataContext['id']}" title="Retry">🔁</button>
           `;
         }
-        buttons+= `
-            <button class="grid-btn-edit" data-id="${dataContext['id']}" title="Edit">✏️</button>
-            <button class="grid-btn-delete" data-id="${dataContext['id']}" title="Delete">🗑️</button>
-        
-            `;
-            return buttons;
+        buttons+= `<button class="grid-btn-edit" data-id="${dataContext['id']}" title="Edit">✏️</button>`;
+        if(localStorage.getItem("role")==="admin"){
+            buttons +=`<button class="grid-btn-delete" data-id="${dataContext['id']}" title="Delete">🗑️</button>`;
+          }
+        return buttons;
         };
     this.columns = [
       {id: 'senderId', name: 'From', field: 'senderId' },
       {id: 'sendTo', name: 'To', field: 'sendTo' },
       {id: 'sent', name: 'Status', field: 'sent',formatter: (_r,_c,v) => v ? 'Sent' : 'Failed'},
-      { id: 'actions',  name: 'Actions',  field: 'actions',   minWidth: 120, maxWidth: 90,
+      { id: 'actions',  name: 'Actions',  field: 'actions',  minWidth: 90, maxWidth: 120, cssClass: "text-end",
         formatter: actionsFormatter, sortable: false },
     ];
 
@@ -143,8 +145,7 @@ confirmDelete(item: Message) {
 
   this.service.delete(item.id).subscribe({
     next: () => {
-      this.snackBar.open('Deleted', 'OK', { duration: 2000 });
-      this.loadAll();
+     this.loadAll("Deleted");
     },
     error: () => {
       this.snackBar.open('Delete failed', 'OK', { duration: 2000 });
@@ -159,11 +160,9 @@ retryMessage(item: Message) {
     messageText: item.messageText,
     sent: true
   };
-
   this.service.create(dto).subscribe({
     next: () => {
-      this.snackBar.open('Message resent', 'OK', { duration: 2000 });
-      this.loadAll();
+      this.loadAll("Message resent");
     },
     error: () => {
       this.snackBar.open('Retry failed', 'OK', { duration: 2000 });

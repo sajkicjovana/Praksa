@@ -40,14 +40,21 @@ export class Register {
           next: res => { 
             // console.log("Napravljen nalog")
             localStorage.setItem("token", res.token);
+            localStorage.setItem("role",res.role);
             this.snackBar.open(`Welcome ${res.name}`, 'Ok', {
           duration: 3000
         });
+          if(res.role=='user'){
+            this.router.navigate(['./messages']);
+          }
+          else{
             this.router.navigate(['./connections']);
+          }
             console.log(localStorage.getItem('token'))
           },
           error:err => {
             console.log("Jok");
+            console.log(err)
             this.error = err.error?.error || "Login failed";
           }
         })
