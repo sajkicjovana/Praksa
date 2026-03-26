@@ -18,9 +18,15 @@ import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@a
 import { ConnectionsMockInterceptor } from './mock-api/connections/connections-mock.interceptor';
 import { RoutingMockInterceptor } from './mock-api/routing/routing-mock.interceptor';
 import { AuthMockInterceptor } from './mock-api/auth/auth-mock.interceptor';
+import { loadingInterceptor } from './interceptors/loading-interceptor';
 export const appConfig: ApplicationConfig = {
     providers: [
         provideHttpClient(withInterceptorsFromDi()),
+        {
+            provide:HTTP_INTERCEPTORS,
+            useClass:loadingInterceptor,
+            multi:true,
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: ConnectionsMockInterceptor,

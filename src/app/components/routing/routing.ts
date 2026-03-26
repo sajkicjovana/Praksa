@@ -8,7 +8,7 @@ import { Router, RouterLink } from '@angular/router';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-routing',
-  imports: [RouterLink,FormsModule,AngularSlickgridComponent],
+  imports: [RouterLink, FormsModule, AngularSlickgridComponent],
   templateUrl: './routing.html',
   styleUrl: './routing.css',
 })

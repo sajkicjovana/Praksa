@@ -2,37 +2,35 @@
 <header class="header">
     <a routerLink="/">Home</a>
     @if(isLogged()){
-        <a routerLink="/connections">Connections</a>
-        <a routerLink="/routing">Routing</a>
-        <a (click)="Logout()">Logout</a>
+      @if(isAdmin()){
+          <a routerLink="/connections">Connections</a>
+          <a routerLink="/routing">Routing</a>
+        }
+      <a (click)="Logout()">Logout</a>
     }@else {
         <a routerLink="/login">Login</a>
         <a routerLink="/register">Register</a>
     }
 </header> 
 <div class="container">
+  <!-- <app-loading></app-loading> -->
+    @if(!showForm){
+      <button class="btnForm" (click)="openForm()">+ New Message</button>
+    }
 
-  @if(!showForm){
-    <button class="btnForm" (click)="openForm()">+ New Message</button>
-  }
+    @if(showForm){
+      <app-new-message
+        [editingItem]="editingItem"
+        (close)="closeForm()"
+        (saved)="onSaved()">
+      </app-new-message>
+    }
 
-  @if(showForm){
-    <app-new-message
-      [editingItem]="editingItem"
-      (close)="closeForm()"
-      (saved)="onSaved()">
-    </app-new-message>
-  }
-  @if(isLoading){
-    <div class="loading">Loading...</div>
-  }
-  @else{
-  <angular-slickgrid 
-    gridId="grid"
-    [columns]="columns"
-    [options]="gridOptions"
-    [dataset]="messages"
-    (onClick)="onGridClick($event)">
-  </angular-slickgrid>
-  }
-</div>
+    <angular-slickgrid 
+      gridId="grid"
+      [columns]="columns"
+      [options]="gridOptions"
+      [dataset]="messages"
+      (onClick)="onGridClick($event)">
+    </angular-slickgrid>
+  </div>

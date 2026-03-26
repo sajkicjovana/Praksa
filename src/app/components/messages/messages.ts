@@ -1,15 +1,16 @@
-import { ChangeDetectorRef, Component, inject, NgZone } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { AngularSlickgridComponent, Column, Formatter, GridOption } from 'angular-slickgrid';
 import { Message } from '../../mock-api/routing/routing.model';
 import { NewMessageComponent } from '../new-message/new-message';
 import { MessagesService } from '../../services/messages.services';
+import { ChangeDetectorRef, Component, NgZone, OnInit, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Column, GridOption, AngularSlickgridComponent, Formatter } from 'angular-slickgrid';
 import { Router, RouterLink } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { Loading } from "../loading/loading";
 
 @Component({
   selector: 'app-messages',
-  imports: [FormsModule,RouterLink, AngularSlickgridComponent, NewMessageComponent],
+  imports: [FormsModule, RouterLink, AngularSlickgridComponent, NewMessageComponent],
   templateUrl: './messages.html',
   styleUrl: './messages.css',
 })
@@ -33,6 +34,13 @@ export class Messages {
   Logout() {
     localStorage.removeItem("token");
     this.router.navigate(["login"]);
+  }
+  isAdmin(){
+    if(localStorage.getItem('role')==='admin'){
+      return true;
+    }
+    return false;
+    
   }
   
   ngOnInit() {

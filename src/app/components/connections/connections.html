@@ -23,7 +23,9 @@
     }
 </header>
 
+
 <div class="container">
+
 @if(!showForm || editingItem){
   <button class="btnForm" (click)="openForm()">+ New Connection</button>
 }
@@ -66,12 +68,13 @@
             <label>Username</label>
             <input type="text" name="username" [(ngModel)]="formModel.username" #username="ngModel"
               class="formNewConnection" required pattern="^[a-zA-Z0-9]{8,30}$">
-            @if(username.touched && username.invalid){
+            @if(username.touched && username.invalid){   
               <div class="errorText">
                 @if(username.errors?.['required']){ Username is required. }
                 @if(username.errors?.['pattern']){ Username must be 8-30 letters/numbers. }
               </div>
-            }
+          }
+            
             @if(username.value && isUsernameTaken(username.value)){
               <div class="errorText">Username already exists.</div>
             }
@@ -137,11 +140,6 @@
 
     <button class="btnRst" (click)="resetFilters()">Reset filters</button>
   </div>
-
-  @if(isLoading){
-    <div class="loading">Loading...</div>
-  }
-  @else{
     <angular-slickgrid
       gridId="grid1"
       [columns]="columns"
@@ -150,7 +148,6 @@
       (onClick)="onGridClick($event)"></angular-slickgrid>
       <!-- (onAngularGridCreated)="onGridReady()"> 
     </angular-slickgrid> -->
-  }
 @if(showDeleteModal){
   <div class="modal-backdrop" (click)="cancelDelete()">
     <div class="modal" (click)="$event.stopPropagation()">

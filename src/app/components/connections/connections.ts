@@ -4,10 +4,11 @@ import { Column, GridOption, AngularSlickgridComponent, Formatter } from 'angula
 import { ConnectionsService } from '../../services/connections.service';
 import { Router, RouterLink } from '@angular/router';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { Loading } from "../loading/loading";
 
 @Component({
   selector: 'app-connections',
-  imports: [AngularSlickgridComponent,RouterLink,FormsModule],
+  imports: [AngularSlickgridComponent, RouterLink, FormsModule],
   templateUrl: './connections.html',
   styleUrl: './connections.css',
 })
@@ -30,7 +31,6 @@ export class Connections implements OnInit {
   itemToDelete: any = null;
   editingItem: any = null;
   types = ['HTTP', 'SMPP'];
-  isLoading=true;
 
   formModel = {
     name: '', url: '', username: '', password: '', sms: null as any, type: ''
@@ -54,7 +54,6 @@ export class Connections implements OnInit {
     }
 
   loadAll(itemDeleted? : boolean) {
-    this.isLoading=true;
     this.service.getAll().subscribe(data => {
       this.dataset = data.map(item => ({
         ...item,
@@ -64,7 +63,6 @@ export class Connections implements OnInit {
        
       }));
       // this.filteredDataset=this.dataset;
-      this.isLoading=false;
       this.cdr.detectChanges();
 
       if(itemDeleted){
