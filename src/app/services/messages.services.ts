@@ -39,11 +39,12 @@ export class MessagesService {
           country: trySending?.route?.country,
           connection: trySending?.route?.connection?.name
         };
+        // console.log(newDto);
         return this.http.post<Message>(this.base, newDto, { params: { useRealSendAPI: this.isReal } });
       })
     );
   }
-  delete(id: number) { return this.http.delete(`/api/messages/${id}`, { params: { useRealSendAPI: this.isReal } });} 
+  delete(id: number) {return this.http.delete(`/api/messages/${id}`, { params: { useRealSendAPI: this.isReal } });} 
 
   private buildprefixTable(){
     const countryMap = new Map(COUNTRIES.map(c=>[c.id,c]));
@@ -121,15 +122,20 @@ export class MessagesService {
     }
 
     const dtoReal: realMessage = {
+      type:"text",
       sender: dto.senderId,
       receiver: dto.sendTo,
-      dirMask: 19,
-      dirUrl: route.connection.url,
+      dlrMask: 19,
+      dcs: "GSM",
+      text:dto.messageText,
+      dlrUrl: route.connection.url,
       auth: {
         username: route.connection.userName,
         password: route.connection.password
       }
+
     };
+    // console.log("DTO REAL:",dtoReal)
 
     return this.callRealAPI(route.connection, route, dtoReal);
   }

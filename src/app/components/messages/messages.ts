@@ -57,7 +57,6 @@ export class Messages {
     this.showForm = true;
   }
   loadAll(note?:string) {
-    this.isLoading=true;
     this.service.getAll().subscribe(data => {
       this.messages = data.map(item => ({
         ...item,
@@ -70,7 +69,6 @@ export class Messages {
       if(note){
         this.snackBar.open(note, 'OK', { duration: 2000 });
       }
-      this.isLoading=false;
       this.cdr.detectChanges();
     });
 }

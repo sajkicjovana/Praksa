@@ -77,18 +77,20 @@ export class RoutingMockInterceptor implements HttpInterceptor {
                 // ── /api/messages ─────────────────────────────────────────────────────
         if (url.includes('/api/messages')) {
                 const useRealApi = req.params.get('useRealSendAPI') === 'true';
-                const store = useRealApi ? this.realMessagesStore : this.mockMessagesStore;
+                const storeMessages = useRealApi ? this.realMessagesStore : this.mockMessagesStore;
                 
                 const idMatch = url.match(/\/api\/messages\/(\d+)/);
                 const id = idMatch ? parseInt(idMatch[1], 10) : null;
-
                 switch (req.method) {
-                    case 'GET':  return ok(store.getAll());
-                    case 'POST': return this.postMessage(req as HttpRequest<CreateMessageDto>, store);
+                    case 'GET':  return ok(storeMessages.getAll());
+                    case 'POST': return this.postMessage(req as HttpRequest<CreateMessageDto>, storeMessages);
                     case 'DELETE':
                         if (id === null) return err(400, 'Id is required for delete');
+                     
 
-                        const deleted = this.store.remove(id);
+                        const deleted = storeMessages.remove(id);
+                        // console.log("aaaa");
+                        // console.log(deleted);
                         return deleted
                             ? ok(deleted)
                             : err(404, `Message with id ${id} not found`);

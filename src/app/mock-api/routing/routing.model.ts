@@ -50,12 +50,14 @@ export interface realMessage{
     type?: string;
     sender?: string;
     receiver?: string;
-    dirMask?: number;
-    dirUrl?: string;
+    dlrMask?: number;
+    dlrUrl?: string;
     flash?: boolean;
     validityPeriodMinutes?: number;
     custom?: Object;
     auth?:Object;
+    text?:string;
+    dcs?:string;
     
 }
 
