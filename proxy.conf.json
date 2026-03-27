@@ -1,0 +1,11 @@
+{
+    "/real-api": {
+      "target": "http://sms.horisen.info:12020",
+      "secure": false,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/real-api": ""
+      },
+      "logLevel": "debug"
+    }
+  }
