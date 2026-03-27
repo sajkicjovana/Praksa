@@ -19,10 +19,10 @@ export class Messages {
   isLoading=true;
   router: Router = inject(Router);
 
-  private service = inject(MessagesService);
+  public  service = inject(MessagesService);
   private zone = inject(NgZone);
   private cdr= inject(ChangeDetectorRef);
-  isReal =false;
+  // isReal =false;
   messages: Message[] = [];
   showForm = false;
   editingItem: Message | null = null;
@@ -58,7 +58,7 @@ export class Messages {
   }
   loadAll(note?:string) {
     this.isLoading=true;
-    this.service.getAll(this.isReal).subscribe(data => {
+    this.service.getAll().subscribe(data => {
       this.messages = data.map(item => ({
         ...item,
         from: item.senderId,
@@ -169,7 +169,7 @@ retryMessage(item: Message) {
     messageText: item.messageText,
     sent: true
   };
-  this.service.create(dto,false).subscribe({
+  this.service.create(dto).subscribe({
     next: () => {
       this.loadAll("Message resent");
     },

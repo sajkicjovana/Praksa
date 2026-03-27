@@ -318,14 +318,3 @@ angular-slickgrid {
   border-radius: 6px;
 }
 
-.example-section {
-  display: flex;
-  align-content: center;
-  align-items: center;
-  height: 10px;
-}
-
-.example-margin {
-  margin: 5px;
-  padding-top: 30px;
-}

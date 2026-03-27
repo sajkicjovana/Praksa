@@ -23,7 +23,7 @@ export class NewMessageComponent {
   private service = inject(MessagesService);
 
 
-  isReal: boolean = false;
+  // isReal: boolean = false;
   numbers: string[] = [];
 
   formModel = {
@@ -58,7 +58,7 @@ export class NewMessageComponent {
       
       
       console.log(dto);
-      this.service.create(dto,this.checked).subscribe({
+      this.service.create(dto).subscribe({
         next: () => {
           
           this.snackBar.open('Message sent', 'OK', { duration: 2000 });
