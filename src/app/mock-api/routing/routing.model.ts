@@ -39,9 +39,24 @@ export interface Message {
     messageText: string;
     country?: string;
     operator?: string;
-    connection?: string;
+    connection?: Object;
     sent?: boolean;
     failReason?: string | null;
+
+    
+
+}
+export interface realMessage{
+    type?: string;
+    sender?: string;
+    receiver?: string;
+    dirMask?: number;
+    dirUrl?: string;
+    flash?: boolean;
+    validityPeriodMinutes?: number;
+    custom?: Object;
+    auth?:Object;
+    
 }
 
 export type CreateMessageDto = Omit<Message, 'id'>;

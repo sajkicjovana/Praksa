@@ -69,6 +69,16 @@
         <button class="btnCloseForm" type="button" (click)="closeForm()">
           Cancel
         </button>
+
+        <section class="example-section">
+          <mat-slide-toggle
+              class="example-margin"
+              [checked]="checked"
+              [disabled]="disabled">
+            Real message
+          </mat-slide-toggle>
+        </section>
+
       </div>
 
     </div>

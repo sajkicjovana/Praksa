@@ -7,10 +7,11 @@ import { Column, GridOption, AngularSlickgridComponent, Formatter } from 'angula
 import { Router, RouterLink } from '@angular/router';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import { Loading } from "../loading/loading";
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-messages',
-  imports: [FormsModule, RouterLink, AngularSlickgridComponent, NewMessageComponent],
+  imports: [FormsModule, RouterLink, AngularSlickgridComponent, NewMessageComponent,MatSlideToggleModule],
   templateUrl: './messages.html',
   styleUrl: './messages.css',
 })
@@ -21,7 +22,7 @@ export class Messages {
   private service = inject(MessagesService);
   private zone = inject(NgZone);
   private cdr= inject(ChangeDetectorRef);
-
+  isReal =false;
   messages: Message[] = [];
   showForm = false;
   editingItem: Message | null = null;
@@ -57,7 +58,7 @@ export class Messages {
   }
   loadAll(note?:string) {
     this.isLoading=true;
-    this.service.getAll().subscribe(data => {
+    this.service.getAll(this.isReal).subscribe(data => {
       this.messages = data.map(item => ({
         ...item,
         from: item.senderId,
@@ -168,7 +169,7 @@ retryMessage(item: Message) {
     messageText: item.messageText,
     sent: true
   };
-  this.service.create(dto).subscribe({
+  this.service.create(dto,false).subscribe({
     next: () => {
       this.loadAll("Message resent");
     },

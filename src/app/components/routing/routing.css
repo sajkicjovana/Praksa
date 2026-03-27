@@ -295,3 +295,8 @@ angular-slickgrid {
 .header a:last-child {
   margin-right: 0;
 }
+.spiner{
+  display: flex;
+  justify-content: center;
+  padding-top: 20%;
+}

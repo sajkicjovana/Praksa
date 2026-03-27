@@ -1,12 +1,16 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { CreateMessageDto, Message } from "../mock-api/routing/routing.model";
+import { CreateMessageDto, Message, realMessage } from "../mock-api/routing/routing.model";
 import { COUNTRIES, OPERATORS } from "../mock-api/routing/routing-mock.store";
+import { RoutingMockStore } from "../mock-api/routing/routing-mock.store";
+import { ConnectionsMockStore } from "../mock-api/connections/connections-mock.store";
 @Injectable({ providedIn: 'root' })
 export class MessagesService {
+  private routingStore = new RoutingMockStore();
+  private connectionsStore = new ConnectionsMockStore();
   private http = inject(HttpClient);
   private readonly base = '/api/messages';
-  
+  isReal = false;
   private prefixTable:{
     fullPrefix:string,
     country: any,
@@ -15,10 +19,16 @@ export class MessagesService {
   constructor(){
     this.buildprefixTable();
   }
-  getAll() { return this.http.get<Message[]>(this.base); }
-  create(dto: CreateMessageDto) { 
-    const trySending = this.simulateSend(dto);
-    
+  getAll(isReal: boolean) { return this.http.get<Message[]>(this.base, { params: { useRealSendAPI: isReal }}); }
+  create(dto: CreateMessageDto,isReal:boolean ) { 
+    let trySending;
+    if(isReal){
+      trySending = this.realSending(dto);
+    }
+    else{
+      trySending = this.simulateSend(dto);
+    }
+
     const newDto:CreateMessageDto= {
       senderId:dto.senderId,
       sendTo:dto.sendTo,
@@ -26,12 +36,13 @@ export class MessagesService {
       sent:trySending.success,
       failReason:trySending.failReason,
       operator:trySending.route?.operator,
-      country:trySending.route?.country
-    }
+      country:trySending.route?.country,
+      connection:trySending.route?.connection?.name
+      }
 
-    return this.http.post<Message>(this.base, newDto);
+    return this.http.post<Message>(this.base, newDto, { params: { useRealSendAPI: isReal } } ); 
   }
-  delete(id: number) { return this.http.delete(`/api/messages/${id}`);}
+  delete(id: number) { return this.http.delete(`/api/messages/${id}`);} //dodaj params
 
   private buildprefixTable(){
     const countryMap = new Map(COUNTRIES.map(c=>[c.id,c]));
@@ -57,7 +68,28 @@ export class MessagesService {
   }
 
   private findRoute(number:string){
-    return this.prefixTable.find(pref=>number.startsWith(pref.fullPrefix))
+    const prefix= this.prefixTable.find(pref=>number.startsWith(pref.fullPrefix))
+    console.log(prefix)
+    if(!prefix) 
+      return null;
+
+    const route = this.routingStore.getAll().find(r =>r.countryId === prefix.country.id && r.operatorId === prefix.operator.id);
+    if(!route)  
+      return null;
+
+    //konekcija id 
+    const connection = this.connectionsStore.getAll().find(con => con.id===route.connectionId);
+
+    if(!connection)
+      return null;
+
+
+    return{
+      ...prefix,
+      route,
+      connection
+    };
+
   }
   
   private simulateSend(dto:CreateMessageDto){
@@ -72,7 +104,7 @@ export class MessagesService {
     }
 
     const success = Math.random() < 0.8;
-    
+    // const success = true;
     return {
       success,
       failReason:success?null:'Random failure',
@@ -80,5 +112,38 @@ export class MessagesService {
     };
 
   }
+  realSending(dto:CreateMessageDto){
+    const number = dto.sendTo;
+    const route = this.findRoute(number);
+
+    if(!route){
+      return{
+        success:false,
+        failReason:'No route found',
+        route:null
+      }
+    }
+
+    const connection = route.connection;
+    
+    const dtoReal: realMessage = {
+      sender: dto.senderId,
+      receiver: dto.sendTo,
+      dirMask: 19,
+      dirUrl: connection.url,
+      auth: {
+        username: connection.userName,
+        password: connection.password
+      }
+    };
+  
+    return {
+      success: true,
+      route,
+      payload: dtoReal
+    };
+
+
+}
 
 }

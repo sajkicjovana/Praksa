@@ -3,14 +3,18 @@ import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreateMessageDto, Message } from '../../mock-api/routing/routing.model';
 import { MessagesService } from '../../services/messages.services';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
   selector: 'app-new-message',
-  imports: [FormsModule],
+  imports: [MatCardModule, FormsModule, MatSlideToggleModule],
   templateUrl: './new-message.html',
   styleUrl: './new-message.css',
 })
 export class NewMessageComponent {
+  checked = false;
+  disabled = false;
 
   @Output() close = new EventEmitter<void>();
   @Output() saved = new EventEmitter<void>();
@@ -18,6 +22,8 @@ export class NewMessageComponent {
   @Input() editingItem: Message | null = null;
   private service = inject(MessagesService);
 
+
+  isReal: boolean = false;
   numbers: string[] = [];
 
   formModel = {
@@ -49,8 +55,10 @@ export class NewMessageComponent {
         sendTo: num,
         messageText: this.formModel.messageText,
       };
+      
+      
       console.log(dto);
-      this.service.create(dto).subscribe({
+      this.service.create(dto,this.checked).subscribe({
         next: () => {
           
           this.snackBar.open('Message sent', 'OK', { duration: 2000 });

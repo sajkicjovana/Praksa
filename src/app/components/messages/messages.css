@@ -72,7 +72,17 @@ letter-spacing: 0.5px;
   font-size: 15px;
   font-weight: 600;
 }
-
+.top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+mat-slide-toggle {
+  display: block;
+  margin-left: auto;
+  margin-bottom: 10px;
+}
 form {
   padding: 20px;
   background: transparent;
@@ -307,3 +317,8 @@ angular-slickgrid {
   justify-content: center;
   padding-top: 20%;
 }
+/* .messages-toggle{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+} */

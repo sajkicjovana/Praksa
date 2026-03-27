@@ -67,7 +67,7 @@
           <div class="form-field">
             <label>Username</label>
             <input type="text" name="username" [(ngModel)]="formModel.username" #username="ngModel"
-              class="formNewConnection" required pattern="^[a-zA-Z0-9]{8,30}$">
+              class="formNewConnection" required pattern="^[a-zA-Z0-9\w]{8,30}$">
             @if(username.touched && username.invalid){   
               <div class="errorText">
                 @if(username.errors?.['required']){ Username is required. }
@@ -83,11 +83,11 @@
           <div class="form-field">
             <label>Password</label>
             <input type="password" name="password" [(ngModel)]="formModel.password" #password="ngModel"
-              class="formNewConnection" required pattern="^(?=.*[A-Z])(?=.*[0-9]).{8,}$">
+              class="formNewConnection" required >
             @if(password.touched && password.invalid){
               <div class="errorText">
                 @if(password.errors?.['required']){ Password is required. }
-                @if(password.errors?.['pattern']){ Min 8 chars, 1 uppercase & 1 number. }
+                <!-- @if(password.errors?.['pattern']){ Min 8 chars, 1 uppercase & 1 number. } -->
               </div>
             }
           </div>

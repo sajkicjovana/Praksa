@@ -14,9 +14,16 @@
 </header> 
 <div class="container">
   <!-- <app-loading></app-loading> -->
+  <div class="top"> 
     @if(!showForm){
       <button class="btnForm" (click)="openForm()">+ New Message</button>
     }
+    <mat-slide-toggle
+      [(ngModel)]="isReal"
+      (change)="loadAll()">
+      Real messages
+    </mat-slide-toggle>
+  </div>
 
     @if(showForm){
       <app-new-message
@@ -25,6 +32,10 @@
         (saved)="onSaved()">
       </app-new-message>
     }
+    <!-- <mat-slide-toggle class="messages-toggle"
+      [(ngModel)]="isReal"
+      (change)="loadAll()"> Real messages
+    </mat-slide-toggle> -->
 
     <angular-slickgrid 
       gridId="grid"

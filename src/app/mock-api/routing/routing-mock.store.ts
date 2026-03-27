@@ -150,33 +150,38 @@ export class RoutingMockStore {
         this.initialize();
     }
 }
-// ── Messages Store (localStorage) ────────────────────────────────────────────
 
-const MSG_STORAGE_KEY = 'mock_messages';
-const MSG_SEQ_KEY     = 'mock_messages_seq';
+// ── Messages Store (localStorage) ────────────────────────────────────────────
+// storageKey is passed via constructor so mock and real-API sends use separate buckets.
 
 export class MessagesMockStore {
+    private readonly storageKey: string;
+    private readonly seqKey: string;
+
+    constructor(storageKey: string) {
+        this.storageKey = storageKey;
+        this.seqKey     = `${storageKey}_seq`;
+    }
 
     private load(): Message[] {
-        const raw = localStorage.getItem(MSG_STORAGE_KEY);
+        const raw = localStorage.getItem(this.storageKey);
         return raw ? (JSON.parse(raw) as Message[]) : [];
     }
 
     private save(records: Message[]): void {
-        localStorage.setItem(MSG_STORAGE_KEY, JSON.stringify(records));
+        localStorage.setItem(this.storageKey, JSON.stringify(records));
     }
 
     private nextId(): number {
-        const current = parseInt(localStorage.getItem(MSG_SEQ_KEY) ?? '0', 10);
+        const current = parseInt(localStorage.getItem(this.seqKey) ?? '0', 10);
         const next = current + 1;
-        localStorage.setItem(MSG_SEQ_KEY, String(next));
+        localStorage.setItem(this.seqKey, String(next));
         return next;
     }
 
     getAll(): Message[] {
         return this.load();
     }
-
 
     create(dto: CreateMessageDto): Message {
         const records = this.load();
@@ -185,6 +190,13 @@ export class MessagesMockStore {
         this.save(records);
         return record;
     }
+
+    /** Dev helper — wipe this store's data */
+    reset(): void {
+        localStorage.removeItem(this.storageKey);
+        localStorage.removeItem(this.seqKey);
+    }
+
     remove(id: number): Message | null {
     const records = this.load();
     const index = records.findIndex(r => r.id === id);
@@ -192,11 +204,5 @@ export class MessagesMockStore {
     const [deleted] = records.splice(index, 1);
     this.save(records);
     return deleted;
-    }
-
-    /** Dev helper — wipe all message log data */
-    reset(): void {
-        localStorage.removeItem(MSG_STORAGE_KEY);
-        localStorage.removeItem(MSG_SEQ_KEY);
     }
 }
